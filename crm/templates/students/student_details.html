@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+<section class="container">
+  <div class="page-inner">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Student Details</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <!-- Photo -->
+          <div class="col-md-3 text-center mb-3">
+            <img src="{{student.photo.url}}" alt="Student Photo" class="rounded shadow-sm mb-2 " style="height:300px; width:250px; object-fit:fill;">
+            <h5 class="mt-2">{{ student.first_name }} {{ student.last_name }}</h5>
+            <p class="text-muted mb-0">Adm No: {{ student.adm_num }}</p>
+          </div>
+
+          <!-- Details -->
+          <div class="col-md-8 ms-1">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <strong>Email:</strong>
+                <p class="mb-1">{{student.email}}</p>
+              </div>
+              <div class="col-md-6">
+                <strong>Contact:</strong>
+                <p class="mb-1">{{ student.contact_num }}</p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <strong>Date of Birth:</strong>
+                <p class="mb-1">{{ student.dob | date:"Y-m-d" }}</p>
+              </div>
+              <div class="col-md-6">
+                <strong>Education:</strong>
+                <p class="mb-1">{{ student.education }}</p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <strong>Address:</strong>
+                <p class="mb-1">{{ student.address }}{{ student.place }}</p>
+              </div>
+              <div class="col-md-6">
+                <strong>District & Pincode:</strong>
+                <p class="mb-1">{{ student.district }} - {{ student.pincode }}</p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <strong>Course:</strong>
+                <p class="mb-1">{{ student.course }}</p>
+              </div>
+              <div class="col-md-6">
+                <strong>Batch:</strong>
+                <p class="mb-1">{{ student.batch }}</p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <strong>Trainer:</strong>
+                <p class="mb-1">{{ student.trainer }}</p>
+              </div>
+              <div class="col-md-6">
+                <strong>Join Date:</strong>
+                <p class="mb-1">{{ student.join_date }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card-footer text-end">
+        <a href="{% url 'students-list' %}" class="btn btn-secondary btn-sm">Back</a>
+        <a  href="{% url 'student-edit' student.uuid %}" class="btn btn-warning btn-sm">Edit</a>
+        <a href = "{% url 'student-delete' student.uuid %}" class="btn btn-danger btn-sm">Delete</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
