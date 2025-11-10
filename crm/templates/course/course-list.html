@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block section %}
+<section class="container">
+  <div class="page-inner">
+    <!-- Search and Filters -->
+    <div class="row mb-4 justify-content-between">
+      <div class="col-md-3 mb-2">
+
+        <form action="{% url 'course-list' %}" method="get"  >
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search..."
+          id="searchInput"
+          name="query"
+          value="{% if query %}{{query}}{% endif %}"
+        />
+        </form>
+      </div>
+      <div class="col-md-3 mb-2">
+       <a href="{% url 'add-course' %}" class="btn btn-primary px-5 btn-round">Add Course</a>
+      </div>
+    </div>
+
+
+
+    <!-- Data Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Fee</th>
+            <th>Offer Fee</th>
+            <th>Mode</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Sample Row -->
+           {% for course in courses %}
+          <tr>
+            <td>{{course.code}}</td>
+            <td>{{course.name}} </td>
+            <td>{{course.fee}}</td>
+            <td>{{course.get_offer_fee}}</td>
+            <td>
+                <ul>
+                    {% for mode in course.mode %}
+                    <li>{{mode}}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td class="text-center">
+              <a href="{% url 'course-details' course.uuid %}"class="btn btn-sm btn-outline-primary me-1" title="View">
+                <i class="fas fa-eye"></i>
+              </a>
+              <a href="{% url 'edit-course' course.uuid %}" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                <i class="fas fa-pen"></i>
+              </a>
+              <a href="{% url 'delete-course' course.uuid %}" title="Delete">
+                <i class="fas fa-trash"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+
+{% endblock %}

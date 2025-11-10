@@ -91,6 +91,12 @@ class TrainerChoices(models.TextChoices):
 
 class Students(BaseClass):
 
+    # for students to login use profile
+
+    profile=models.OneToOneField('authentication.Profile',on_delete=models.CASCADE)
+
+
+
     first_name = models.CharField(max_length=25)
 
     last_name = models.CharField(max_length=25)
@@ -115,11 +121,16 @@ class Students(BaseClass):
     
     pincode = models.CharField(max_length=6)
 
-    course = models.CharField(max_length=20, choices=CourseChoices.choices)
+    # course = models.CharField(max_length=20, choices=CourseChoices.choices)
+    # to make it model for avoid frequent devoloper--structure(appname.modelname) on delete - if course delete this record also dlt
+    # model.set_null for not deleting
+                                #  app name model name 
+    course = models.ForeignKey('course.Course',on_delete=models.CASCADE)
 
-    batch = models.CharField(max_length=10,choices=BatchChoices.choices)
 
-    trainer = models.CharField(max_length=15,choices=TrainerChoices.choices)
+    batch = models.ForeignKey('batch.Batch',on_delete=models.CASCADE)
+
+    trainer = models.ForeignKey('trainer.Trainer',on_delete=models.CASCADE)
 
     join_date = models.DateField(auto_now_add=True) # if use auto_now -- then it will upate every chainge or update the field
 

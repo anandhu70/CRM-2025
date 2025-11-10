@@ -13,10 +13,16 @@
                 <h3 class="fw-bold mb-3">Dashboard</h3>
                 <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
               </div>
+         <!-- for permissions -->
+              {% check_roles request 'Admin,Sales' as allow %}
+
+              {% if allow %}
               <div class="ms-md-auto py-2 py-md-0">
                 
                 <a href="{% url 'students-list' %}" class="btn btn-primary btn-round px-5">Students</a>
               </div>
+
+              {% endif %}
             </div>
             <div class="row">
               <div class="col-sm-6 col-md-3">

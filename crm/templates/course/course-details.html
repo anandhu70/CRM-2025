@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+<section class="container">
+  <div class="page-inner">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">course Details</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          
+
+          <!-- Details -->
+          <div class="col-md-8 ms-1">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <strong>Name:</strong>
+                <p class="mb-1">{{course.name}}</p>
+              </div>
+              <div class="col-md-6">
+                <strong>Course code:</strong>
+                <p class="mb-1">{{ course.code }}</p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <strong>Fee:</strong>
+                <p class="mb-1">{{ course.fee }}</p>
+              </div>
+              <div class="col-md-6">
+                <strong>Offer fee:</strong>
+                <p class="mb-1">{{course.get_offer_fee }}</p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <strong>Mode:</strong>
+
+                {% for mode in course.mode %}
+                <p class="mb-1">{{ mode }}</p>
+                {% endfor %}
+              </div>
+              
+            </div>
+
+            
+
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card-footer text-end">
+        <a href="{% url 'course-list' %}" class="btn btn-secondary btn-sm">Back</a>
+        <a  href="{% url 'edit-course' course.uuid %}" class="btn btn-warning btn-sm">Edit</a>
+        <a href = "{% url 'delete-course' course.uuid %}" class="btn btn-danger btn-sm">Delete</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice - Student Payment</title>
+  <style>
+    /* __define-ocg__ : Static WeasyPrint Invoice Layout */
+    body {
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      margin: 30px;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .invoice-box {
+      max-width: 800px;
+      margin: auto;
+      border: 1px solid #eee;
+      padding: 20px 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      border-radius: 8px;
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #2980b9;
+      margin-bottom: 20px;
+    }
+
+    .header h2 {
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .info {
+      margin-bottom: 20px;
+    }
+
+    .info div {
+      margin-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    table th {
+      background-color: #2980b9;
+      color: #fff;
+    }
+
+    .total {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .paid {
+      color: green;
+    }
+
+    .pending {
+      color: orange;
+    }
+
+    .failed {
+      color: red;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+      font-size: 12px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-box">
+    <div class="header">
+      <h2>Payment Invoice</h2>
+      <p><strong>Invoice Date:</strong>{{transaction.transaction_at|date:'d-m-Y'}}</p>
+    </div>
+
+    <div class="info">
+      <div><strong>Student:</strong> {{transaction.payment.student.first_name}} {{transaction.payment.student.last_name}}</div>
+      <div><strong>Course:</strong> {{transaction.payment.student.course.name}}</div>
+      <div><strong>Payment Option:</strong> {{transaction.payment.payment_option}}</div>
+      <div><strong>Fee:</strong>₹{{transaction.payment.fee}}</div>
+      <div><strong>Amount To Be Paid: </strong>  {{transaction.payment.amount_to_be_paid}}</div>
+      <div><strong> Paid:</strong>{% if transaction.payment.payment_option == 'One Time' %} 
+                                              ₹{{transaction.payment.amount_to_be_paid}} 
+                                              {% elif transaction.payment.payment_option == 'EMI' %}
+                                              ₹{{transaction.emi.amount}}
+                                              {% endif %}
+                                            </div>
+      <div><strong>Status:</strong>{{transaction.status}}</div>
+      <div><strong>Paid at:</strong> {{transaction.transaction_at}}</div>
+    </div>
+    {% if transaction.payment.payment_option == 'EMI' %} 
+    <h3>EMI Details</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Installment No</th>
+          <th>Amount</th>
+          <th>Due Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{transaction.emi.installment_no}}</td>
+          <td>₹{{transaction.amount}}</td>
+          <td>{{transaction.emi.due_date}}</td>
+          <td class="paid">{% if transaction.emi.paid %} Paid {% else %} Pending {% endif %}</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    {% endif %}
+
+    <h3>Transaction History</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Razorpay Order ID</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{transaction.rzp_order_id}}</td>
+          <td>{{transaction.amount}}</td>
+          <td class="paid">{{transaction.status}}</td>
+          <td>{{transaction.transaction_at|date:'d-m-Y H:i'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footer">
+      <p>Thank you for your payment!</p>
+      <p>Generated on {{now |date:'d-m-Y H:i'}}</p>
+    </div>
+  </div>
+</body>
+</html>

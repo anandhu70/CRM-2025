@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+<section class="container">
+  <div class="page-inner">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Edit Course</h4>Course
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          <!-- First Name & Last Name -->
+
+          {% csrf_token %}
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="first_name" class="form-label"> Course Name</label>
+              <!-- <input type="text" id="first_name" name="first_name" class="form-control" required> -->
+              {{form.name}}
+
+              {% if form.errors.name %}
+              <p class="text-sm text-bg-danger">{{form.errors.name.0}}</p>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <label for="last_name" class="form-label">course code</label>
+              <!-- <input type="text" id="last_name" name="last_name" class="form-control" required> -->
+              {{form.code}}
+              {% if form.errors.code  %}
+              <p class="text-sm text-bg-danger">{{form.errors.code.0}}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Admission No, Email & Contact -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="email" class="form-label">Course fee</label>
+              <!-- <input type="email" id="email" name="email" class="form-control" required> -->
+
+              {{form.fee}}
+
+              {% if form.errors.fee %}
+              <p class="text-sm text-bg-danger">{{form.errors.fee.0}}</p>
+              {% endif %}
+
+              <div class="col-md-6">
+              <label for="contact_num" class="form-label">Offer percentage</label>
+              <!-- <input type="text" id="contact_num" name="contact_num" maxlength="12" class="form-control" required> -->
+
+              {{form.offer_percent}}
+
+              {% if form.errors.offer_percent %}
+              <p class="fs-6 text-danger">{{form.errors.offer_percent.0}}</p>
+              {% endif %}
+
+
+            
+
+            </div>
+          </div>
+
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="photo" class="form-label">mode</label>
+              
+
+              <div class="d-flex flex-wrap gap-3">
+                {% for checkbox in form.mode %}
+                    <div class="form-check form-check-inline">
+                    {{ checkbox.tag }}
+                <label class="form-check-label">{{ checkbox.choice_label }}</label>
+                </div>
+            {% endfor %}
+
+           
+         </div>
+          {% if form.errors.mode %}
+              <p class="fs-6 text-danger">{{form.errors.mode.0}}</p>
+              {% endif %}
+            </div>
+          </div>
+
+         
+          <!-- Submit -->
+          <div class="text-end">
+            <button type="submit" class="btn btn-success">Edit course</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

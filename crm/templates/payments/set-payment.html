@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+<section class="container">
+  <div class="page-inner">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Choose Payment Option</h4>
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          <!-- First Name & Last Name -->
+
+          {% csrf_token %}
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="first_name" class="form-label" >Payment Options</label>
+              <!-- <input type="text" id="first_name" name="first_name" class="form-control" required> -->
+              {{form.payment_option}}
+            </div>
+            <div class="col-md-6">
+              <label for="last_name" class="form-label" id="emi-label">No of EMIs</label>
+              <!-- <input type="text" id="last_name" name="last_name" class="form-control" required> -->
+              {{form.no_of_emi}}
+            </div>
+          </div>
+
+          <!-- Admission No, Email & Contact -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="email" class="form-label">Fee</label>
+              <input type="text" id="fee" name="fee" class="form-control" value="{{request.user.students.course.fee}}" readonly>
+
+            </div>
+            <div class="col-md-6">
+              <label for="contact_num" class="form-label">Amount To Be Paid</label>
+              <input type="text" name="amount" maxlength="12" class="form-control" id="pay-amount" readonly>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="text-end">
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const paymentSelect = document.querySelector('select[name="payment_option"]');
+  const emiField = document.querySelector('select[name="no_of_emi"]');
+  const emiLabel = document.querySelector('#emi-label');
+  const PayAmount = document.querySelector('#pay-amount');
+
+  function updateEmiVisibility() {
+    const value = paymentSelect.value;
+    const fee = parseFloat("{{ request.user.students.course.fee }}") || 0;
+    const offerPercent = parseFloat("{{ request.user.students.offer_percent|default:0 }}") || 0;
+    let amountToBePaid = 0;
+
+    if (value === "One Time") {
+      emiField.style.display = "none";
+      emiLabel.style.display = "none";
+
+      // Apply offer if any
+      amountToBePaid = fee - (fee * offerPercent / 100);
+    } else {
+      emiField.style.display = "block";
+      emiLabel.style.display = "block";
+      // consloe.log(paymentSelect.options[0])
+      if (emiField.options[0].value == 0){
+        emiField.options[0].disabled = true
+        emiField.options[0].hidden = true
+        if (!emiField.value || emiField.value === "0") {
+            emiField.options[1].selected = true;
+            }
+      }
+
+      const emiCount = parseInt(emiField.value) || 0;
+
+      if (emiCount === 2) {
+        amountToBePaid = fee + (fee * 5 / 100);
+      } else if (emiCount === 3) {
+        amountToBePaid = fee + (fee * 10 / 100);
+      } else {
+        amountToBePaid = fee; // default if no EMI selected
+      }
+    }
+
+    // Update field
+    PayAmount.value = amountToBePaid.toFixed(2);
+  }
+
+  paymentSelect.addEventListener("change", updateEmiVisibility);
+  emiField.addEventListener("change", updateEmiVisibility);
+  updateEmiVisibility(); // run once on page load
+});
+</script>
+
+
+{% endblock %}

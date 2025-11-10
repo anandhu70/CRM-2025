@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+
+<section class="container">
+  <div class="page-inner">
+    
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="card shadow-sm p-4" style="max-width: 600px; width: 100%;">
+      <h3 class="text-center mb-4">Verify OTP</h3>
+
+      <p style="font-size: 12px;">We’ve sent a one-time password (OTP) to your registered <span class="hw-bold">{{masked_email}}</span> and phone number <span class="fw-bold">{{masked_phone}}</span>.
+Please check your inbox or SMS to continue.</p>
+      <form method="post">
+
+        {% csrf_token %}
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label">Email OTP</label>
+          {{form.email_otp}}
+
+          {% if form.errors.email_otp %}
+
+        <p class="text-danger">{{form.errors.email_otp.0}}</p>
+
+        {% endif %}
+          <!-- <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Enter your email"
+            required
+          /> -->
+        </div>
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Phone OTP</label>
+
+          {{form.phone_otp}}
+
+          {% if form.errors.phone_otp %}
+
+        <p class="text-danger">{{form.errors.phone_otp.0}}</p>
+
+        {% endif %}
+          <!-- <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="Enter your password"
+            required
+          /> -->
+        </div>
+        
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary w-100">Verify</button>
+        <div class="text-center">
+
+        <p id="timer"></p>
+        </div>
+
+        
+        {% if error %}
+
+        <p class="text-danger text-center">{{error}}</p>
+
+        {% endif %}
+      </form>
+      <!-- Footer links -->
+     
+    </div>
+  </div>
+  </div>
+  
+  </section>
+  <script>
+    let timeLeft = parseInt('{{ remaining_time|default:0 }}');
+    let timerElement = document.getElementById('timer');
+
+    function updateTimer() {
+        if (timeLeft <= 0) {
+            timerElement.innerHTML = `
+            <a class="btn btn-primary mt--3" href='{% url 'otp' %}'>Resend OTP</a>
+                `;
+        } else {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timerElement.innerText = `Time left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            timeLeft--;
+            setTimeout(updateTimer, 1000);
+        }
+    }
+
+    updateTimer();
+</script>
+
+  {% endblock %}

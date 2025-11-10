@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block section %}
+
+<section class="container">
+  <div class="page-inner">
+    <!-- Search and Filters -->
+    <div class="row mb-4 justify-content-end">
+
+      <div class="col-md-3 mb-2">
+       <p class="btn {% if payment.full_paid %}btn-success {% else %} btn-warning {% endif %} px-5 btn-round">{% if payment.full_paid %}Full Paid{% else %} Unpaid {% endif %}</p>
+      </div>
+    </div>
+
+
+
+    <!-- Data Table -->
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Course Name</th>
+            <th>Fee</th>
+            <th>Payment Option</th>
+            <th>Amount To Be Paid</th>
+            {% if payment.payment_option == 'EMI' %} <th>Current Amount</th>{% endif %}
+            <th>Due Date</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% if payment.payment_option == 'One Time' %}
+          <!-- Sample Row -->
+          
+          <tr>
+            <td>{{payment.course.name}}</td>
+            <td>{{payment.fee}} </td>
+            <td>{{payment.payment_option}}</td>
+            <td>{{payment.amount_to_be_paid}}</td>
+            {% check_due_date payment.get_due_date as late%}
+            <td class="{% if late and not payment.full_paid %} text-danger {% else %} text-success {% endif %}">{{payment.get_due_date |date:"d-m-Y"}}</td>
+            <td>{% if payment.full_paid %}<span class="badge bg-success">Paid</span>{% else %}<span class="badge bg-warning">Pending</span> {% endif %}</td>
+            <td class="text-center">
+              {% if payment.full_paid %}
+              <a href="{% url 'generate-invoice' %}"class="btn btn-sm btn-outline-primary me-1" title="View">
+                
+               Invoice
+              </a>
+              {% else %}
+              <a href="{% url 'razorpay' %}"class="btn btn-sm btn-outline-primary me-1" title="View">
+                
+                Pay Now
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% elif payment.payment_option == 'EMI' %}
+
+          {% for emi in payment.emi.all %}
+          <tr>
+            <td>{{payment.course.name}}</td>
+            <td>{{payment.fee}} </td>
+            <td>{{payment.payment_option}}</td>
+            <td>{{payment.amount_to_be_paid}}</td>
+            <td>{{emi.amount}}</td>
+            {% check_due_date emi.due_date as late%}
+            <td class="{% if late and not emi.paid %} text-danger {% else %} text-success {% endif %}">{{emi.due_date |date:"d-m-Y"}}</td>
+            <td>{% if emi.paid %}<span class="badge bg-success">Paid</span>{% else %}<span class="badge bg-warning">Pending</span> {% endif %}</td>
+            <td class="text-center">
+              {% if emi.paid %}
+              <a href="{% url 'generate-invoice-emi' emi.uuid %}"class="btn btn-sm btn-outline-primary me-1" title="View">
+                
+                Invoice
+              </a>
+              {% else %}
+              <a href="{% url 'razorpay-emi' emi.uuid %}"class="btn btn-sm btn-outline-primary me-1" title="View">
+                
+                Pay Now
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

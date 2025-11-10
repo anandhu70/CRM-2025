@@ -18,6 +18,8 @@ urlpatterns=[
 
      path('student-edit/<str:uuid>/',views.EditStudentView.as_view(),name='student-edit'),
 
+     
+
 
 
 

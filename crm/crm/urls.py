@@ -26,7 +26,15 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('',include('students.urls')),path('',include('authentication.urls'))
+    path('',include('students.urls')),path('',include('authentication.urls')),
+
+    path('',include('course.urls')),
+
+    path('',include('batch.urls')),
+
+    path('',include('payments.urls')),
+
+
 ]
 
 

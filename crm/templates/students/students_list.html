@@ -47,8 +47,8 @@
 
           <!-- ormquery -->
 
-                          <!-- to show selected option   should give form in very feild-->
-          <option {% if course == option.value %} selected {% endif %} value="{{option.value}}">{{option.label}}</option>
+                <!--here use name instead of value     to show selected option   should give form in very feild             option.label     -->
+          <option {% if course == option.name %} selected {% endif %} value="{{option.name}}">{{option.name}}</option>
 
           {% endfor%}
           
@@ -64,7 +64,7 @@
            {% for option in batch_choices %}
 
 
-          <option {% if batch == option.value %} selected {% endif %} value="{{option.value}}">{{option.label}}</option>
+          <option {% if batch == option.name %} selected {% endif %} value="{{option.value}}">{{option.name}}</option>
           {% endfor%}
 
           
@@ -80,7 +80,7 @@
         <select name="trainer" class="form-select" id="filter3" onchange="this.form.submit()">
           <option selected disabled>Trainer</option>
            {% for option in trainer_choices %}
-          <option {% if trainer == option.value %} selected {% endif %} value="{{option.value}}">{{option.label}}</option>
+          <option {% if trainer == option.name %} selected {% endif %} value="{{option.value}}">{{option.name}}</option>
 
           {% endfor%}
 

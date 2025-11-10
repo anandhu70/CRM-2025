@@ -1,0 +1,24 @@
+{%extends 'base.html' %}
+
+{% block section %}
+
+<section class="container">
+  <div class="page-inner">
+    <h4 class="mb-3">Enrolled Courses</h4>
+    <div class="row">
+      {% check_payment_obj_exists request as payment_exists %}
+      <a href="{% if payment_exists %} {% url 'payment-list' %} {% else %} {% url 'set-payment' %} {% endif %}">
+      <div class="col-md-4 mb-3">
+        <div class="card h-100 border-primary shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title text-primary">{{request.user.students.course.name}}</h5>
+            <p class="card-text">{{request.user.students.trainer.name}}</p>
+          </div>
+        </div>
+      </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
